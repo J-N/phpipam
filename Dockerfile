@@ -2,7 +2,7 @@ FROM php:5.6-apache
 MAINTAINER Pierre Cheynier <pierre.cheynier@sfr.com>
 
 ENV PHPIPAM_SOURCE https://github.com/phpipam/phpipam/archive/
-ENV PHPIPAM_VERSION 1.16.003
+ENV PHPIPAM_VERSION 1.2
 
 # Install required deb packages
 RUN apt-get update && \ 
@@ -31,11 +31,11 @@ ADD ${PHPIPAM_SOURCE}/${PHPIPAM_VERSION}.tar.gz /tmp/
 RUN	tar -xzf /tmp/${PHPIPAM_VERSION}.tar.gz -C /var/www/html/ --strip-components=1 
 
 # Use system environment variables into config.php
-RUN sed -i \ 
-	-e "s/\['host'\] = \"localhost\"/\['host'\] = \"mysql\"/" \ 
-    -e "s/\['user'\] = \"phpipam\"/\['user'\] = \"root\"/" \ 
-    -e "s/\['pass'\] = \"phpipamadmin\"/\['pass'\] = getenv(\"MYSQL_ENV_MYSQL_ROOT_PASSWORD\")/" \ 
-	/var/www/html/config.php
+#RUN sed -i \ 
+#	-e "s/\['host'\] = \"localhost\"/\['host'\] = \"mysql\"/" \ 
+#    -e "s/\['user'\] = \"phpipam\"/\['user'\] = \"root\"/" \ 
+#    -e "s/\['pass'\] = \"phpipamadmin\"/\['pass'\] = getenv(\"MYSQL_ENV_MYSQL_ROOT_PASSWORD\")/" \ 
+#	/var/www/html/config.php
 
 EXPOSE 80
 
