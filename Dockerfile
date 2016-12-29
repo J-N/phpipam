@@ -30,12 +30,15 @@ COPY php.ini /usr/local/etc/php/
 ADD ${PHPIPAM_SOURCE}/${PHPIPAM_VERSION}.tar.gz /tmp/
 RUN	tar -xzf /tmp/${PHPIPAM_VERSION}.tar.gz -C /var/www/html/ --strip-components=1 
 
+RUN mv /var/www/html/config.dist.php /var/www/html/config.php
+
 # Use system environment variables into config.php
-#RUN sed -i \ 
-#	-e "s/\['host'\] = \"localhost\"/\['host'\] = \"mysql\"/" \ 
-#    -e "s/\['user'\] = \"phpipam\"/\['user'\] = \"root\"/" \ 
-#    -e "s/\['pass'\] = \"phpipamadmin\"/\['pass'\] = getenv(\"MYSQL_ENV_MYSQL_ROOT_PASSWORD\")/" \ 
-#	/var/www/html/config.php
+RUN sed -i \ 
+	-e "s/\['host'\] = \"localhost\"/\['host'\] = getenv(\"MYSQL_HOST\")/" \ 
+    -e "s/\['user'\] = \"phpipam\"/\['user'\] = \"root\"/" \ 
+    -e "s/\['pass'\] = \"phpipamadmin\"/\['pass'\] = getenv(\"MYSQL_ROOT_PASSWORD\")/" \ 
+    -e "s/\['port'\] = 3306/\['port'\] = getenv(\"MYSQL_PORT\")/" \ 
+	/var/www/html/config.php
 
 EXPOSE 80
 
