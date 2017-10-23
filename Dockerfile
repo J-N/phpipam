@@ -5,13 +5,16 @@ ENV PHPIPAM_SOURCE https://github.com/phpipam/phpipam/archive/
 ENV PHPIPAM_VERSION 1.3
 
 # Install required deb packages
-RUN apt-get update && \ 
-	apt-get install -y git php-pear php5-curl php5-mysql php5-json php5-gmp php5-mcrypt php5-ldap libgmp-dev libmcrypt-dev libldap2-dev && \
+RUN apt-get update && apt-get -y upgrade && \ 
+	apt-get install -y git php-pear php5-curl php5-mysql php5-json php5-gmp php5-mcrypt php5-ldap php5-gd php5-socket libgmp-dev libmcrypt-dev libldap2-dev && \
 	rm -rf /var/lib/apt/lists/*
 
 # Configure apache and required PHP modules 
 RUN docker-php-ext-configure mysqli --with-mysqli=mysqlnd && \
 	docker-php-ext-install mysqli && \
+	docker-php-ext-configure gd --enable-gd-native-ttf --with-freetype-dir=/usr/include/freetype2 --with-png-dir=/usr/include --with-jpeg-dir=/usr/include && \
+	docker-php-ext-install gd && \
+	docker-php-ext-install sockets && \
 	docker-php-ext-install pdo_mysql && \
 	docker-php-ext-install gettext && \ 
         docker-php-ext-install pcntl && \ 
